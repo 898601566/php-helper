@@ -33,7 +33,7 @@ class ArrayHelper
     }
 
     /**
-     * 转换关联数组为索引数组可用格式(饼图)
+     * 转换关联数组为索引数组可用格式(饼图专用)
      * @param array $arr
      * @param type $mode 0标题位置后面跟着数字,1标题位置仅标题
      * @return Arr  exp[0=>[$name, $num],1=>[$name, $num]]
