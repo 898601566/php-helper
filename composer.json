@@ -1,0 +1,21 @@
+{
+    "name": "alex/php-helper",
+    "description": "helper function",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "alex",
+            "email": "898601566@qq.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=7.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Helper\\": "src/"
+        }
+    }
+}
