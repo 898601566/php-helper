@@ -134,4 +134,15 @@ class StringHelper
     {
         return strtolower(preg_replace('/([a-z])([A-Z])/', "$1" . $separator . "$2", $camelCaps));
     }
+
+    /**
+     * 通过正则表达式,将数据库类型转换为php类型
+     */
+    public static function sqlTypeToPhpType($str)
+    {
+        $ret = preg_replace("/.*int.*/", 'int', $str);
+        $ret = preg_replace("/.*(char|text|date).*/", 'string', $ret);
+        $ret = preg_replace("/.*deci.*/", 'float', $ret);
+        return $ret;
+    }
 }
