@@ -36,7 +36,6 @@ class DebugHelper
     static function _sdump(...$param)
     {
         static::printBr('debug start');
-        static::printBr('runtime:'.ResponseHelper::getRuntime());
         echo '<pre>';
         foreach ($param as $key => $value) {
             if (is_bool($value) || empty($value)) {
