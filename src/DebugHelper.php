@@ -14,21 +14,24 @@ namespace Helper;
  */
 class DebugHelper
 {
-
-
-    public static int $printSqlLog = 0;
-    public static int $printFileTrace = 0;
-    public static int $exit = 1;
-
     public static function sdump(...$param)
     {
         static::_sdump(...$param);
+        static::end();
     }
 
     public static function sdumpWithSql(...$param)
     {
-        static::printSqlLog();
         static::_sdump(...$param);
+        static::printSqlLog();
+        static::end();
+    }
+
+    public static function sdumpWithTrace(...$param)
+    {
+        static::_sdump(...$param);
+        static::printFileTrace();
+        static::end();
     }
 
     /**
@@ -37,8 +40,7 @@ class DebugHelper
      *
      * @param mixed $param
      */
-    protected
-    static function _sdump(...$param)
+    protected static function _sdump(...$param)
     {
         static::printBr('debug start');
         echo '<pre>';
@@ -50,22 +52,24 @@ class DebugHelper
             }
             static::printBr('next');
         }
-
-        if (static::$exit) {
-            if (!empty(static::$printSqlLog)) {
-                static::printSqlLog();
-            }
-            if (!empty(static::$printFileTrace)) {
-                static::printFileTrace();
-            }
-            echo '</pre>';
-            static::printBr('debug finish');
-            exit();
-        }
     }
 
-    public
-    static function printBr($str)
+    /**
+     * 输出</pre>并退出
+     * @param $str
+     */
+    protected static function end()
+    {
+        echo '</pre>';
+        static::printBr('debug finish');
+        exit();
+    }
+
+    /**
+     * 分隔符
+     * @param $str
+     */
+    public static function printBr($str)
     {
         echo '<br>';
         echo str_pad($str, 50, '=', STR_PAD_BOTH);
