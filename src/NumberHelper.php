@@ -43,14 +43,14 @@ class NumberHelper
      * @param mixed $var 字符串或数组
      * @return bool
      */
-    public static function is_positive_int($var)
+    public static function isPositiveInt($var)
     {
         if (empty($var)) {
             return false;
         }
         if (is_array($var)) {
             foreach ($var as $k => $v) {
-                if (static::is_positive_int($v) == false) {
+                if (static::isPositiveInt($v) == false) {
                     return false;
                 }
             }
