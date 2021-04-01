@@ -145,4 +145,28 @@ class StringHelper
         $ret = preg_replace("/.*deci.*/", 'float', $ret);
         return $ret;
     }
+
+    /**
+     * 返回$subject中$search前面内容
+     *
+     * @param string $subject
+     * @param string $search
+     * @return string
+     */
+    public static function before($subject, $search)
+    {
+        return $search === '' ? $subject : explode($search, $subject)[0];
+    }
+
+    /**
+     * 返回$subject中$search后面内容
+     *
+     * @param string $subject
+     * @param string $search
+     * @return string
+     */
+    public static function after($subject, $search)
+    {
+        return $search === '' ? $subject : array_reverse(explode($search, $subject, 2))[0];
+    }
 }

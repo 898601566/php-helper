@@ -437,4 +437,28 @@ class ArrayHelper
         }
         return $arr;
     }
+
+    /**
+     * 使数组元素唯一,可递归
+     * @param array $array
+     *
+     * @return array
+     */
+    public static function unique(array $array): array
+    {
+        $result = [];
+        foreach ($array ?? [] as $key => $item) {
+            if (is_array($item)) {
+                $result[$key] = self::unique($item);
+            } else {
+                $result[$key] = $item;
+            }
+        }
+
+        if (! self::isAssoc($result)) {
+            return array_unique($result);
+        }
+
+        return $result;
+    }
 }
