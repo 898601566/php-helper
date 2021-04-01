@@ -11,7 +11,7 @@ namespace Helper;
 
 /**
  * Class CurlFunc
- * @package common
+ * @package Helper
  */
 class CurlHelper
 {

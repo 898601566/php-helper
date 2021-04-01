@@ -9,7 +9,7 @@ namespace Helper;
 
 /**
  * Class ArrayHelper
- * @package common
+ * @package Helper
  */
 class ArrayHelper
 {

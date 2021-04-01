@@ -9,7 +9,7 @@ namespace Helper;
 
 /**
  * Class StringHelper
- * @package common
+ * @package Helper
  */
 class StringHelper
 {

@@ -9,7 +9,7 @@ namespace Helper;
 
 /**
  * Class ResponseHelper
- * @package common
+ * @package Helper
  */
 class ResponseHelper
 {

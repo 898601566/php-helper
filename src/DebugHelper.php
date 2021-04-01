@@ -10,7 +10,7 @@ namespace Helper;
 
 /**
  * Class DebugHelper
- * @package common
+ * @package Helper
  */
 class DebugHelper
 {

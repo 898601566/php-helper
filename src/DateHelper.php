@@ -10,7 +10,7 @@ namespace Helper;
 
 /**
  * Class DateHelper
- * @package common
+ * @package Helper
  */
 class DateHelper
 {

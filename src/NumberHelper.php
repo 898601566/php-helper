@@ -11,7 +11,7 @@ namespace Helper;
 
 /**
  * Class NumberHelper
- * @package common
+ * @package Helper
  */
 class NumberHelper
 {
