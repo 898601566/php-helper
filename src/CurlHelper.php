@@ -21,7 +21,7 @@ class CurlHelper
  * @param array $params
  * @return mixed
  */
-public static function curl_post($url, array $params = array(), $token = '')
+public static function curlPost($url, array $params = array(), $token = '')
 {
     $data_string = json_encode($params);
     $ch = curl_init();
@@ -54,7 +54,7 @@ public static function curl_post($url, array $params = array(), $token = '')
     return ($data);
 }
 
-public static function curl_post_raw($url, $rawData)
+public static function curlPostRaw($url, $rawData)
 {
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
@@ -79,7 +79,7 @@ public static function curl_post_raw($url, $rawData)
  * @param int $httpCode 返回状态码
  * @return mixed
  */
-public static function curl_get($url, &$httpCode = 0)
+public static function curlGet($url, &$httpCode = 0)
 {
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);

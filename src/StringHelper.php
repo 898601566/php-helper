@@ -20,7 +20,7 @@ class StringHelper
      * @param type $str
      * @return type
      */
-    public static function encrypt_password($str)
+    public static function encryptPassword($str)
     {
         return password_hash($str, PASSWORD_DEFAULT);
     }
@@ -31,7 +31,7 @@ class StringHelper
      * @return string|null
      */
 
-    public static function random_string($length)
+    public static function randomString($length)
     {
         $str = null;
         $strPol = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz";
@@ -51,7 +51,7 @@ class StringHelper
      * @param type $encoding
      * @return type
      */
-    public static function mb_strtr($source, array $contrast, $encoding = "utf-8")
+    public static function mbStrtr($source, array $contrast, $encoding = "utf-8")
     {
         mb_regex_encoding($encoding);
         foreach ($contrast as $key => $value) {
@@ -65,7 +65,7 @@ class StringHelper
      * @param mixed $var 字符串或数组
      * @return bool
      */
-    public static function is_empty_string($var)
+    public static function isEmptyString($var)
     {
         if (is_array($var)) {
             foreach ($var as $k => $v) {
@@ -108,7 +108,7 @@ class StringHelper
      * @param $user_flag
      * @return string
      */
-    public static function generate_cache_key($app_name, $scene, $user_flag = '')
+    public static function generateCacheKey($app_name, $scene, $user_flag = '')
     {
         return sprintf('%s:%s:%s', $app_name, $scene, $user_flag);
     }

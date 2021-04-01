@@ -8,7 +8,6 @@
 namespace Helper;
 
 
-
 /**
  * Class DebugHelper
  * @package common
@@ -17,7 +16,7 @@ class DebugHelper
 {
 
 
-    public static int $printSqlLog = 1;
+    public static int $printSqlLog = 0;
     public static int $printFileTrace = 0;
     public static int $exit = 1;
 
@@ -26,10 +25,16 @@ class DebugHelper
         static::_sdump(...$param);
     }
 
+    public static function sdumpWithSql(...$param)
+    {
+        static::printSqlLog();
+        static::_sdump(...$param);
+    }
 
     /**
      * 输出多个参数内容,终止运行
      * 如果参数中有数字零,则终止运行
+     *
      * @param mixed $param
      */
     protected
@@ -77,9 +82,9 @@ class DebugHelper
             $sql_source = $log['sql'];
             $sql = [];
             foreach ($sql_source as $key => $value) {
-                    if (strpos($value, 'SHOW') === false) {
-                        $sql[] = preg_replace('/(\[.*\])([\s\S]+)(\[.*\])/', '$1$3$2', $value);
-                    }
+                if (strpos($value, 'SHOW') === FALSE) {
+                    $sql[] = preg_replace('/(\[.*\])([\s\S]+)(\[.*\])/', '$1$3$2', $value);
+                }
             }
             print_r($sql);
         }

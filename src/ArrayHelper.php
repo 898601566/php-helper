@@ -13,36 +13,92 @@ namespace Helper;
  */
 class ArrayHelper
 {
+
     /**
-     * 返回数组指定字段的值组成的数组
+     * 判断一个变量是否可以数组形式访问
+     *
+     * @param $value
+     *
+     * @return bool
+     */
+    public static function accessible($value): bool
+    {
+        return is_array($value) || $value instanceof \ArrayAccess;
+    }
+
+    /**
+     * Return the first element in an array passing a given truth test.
+     *
+     * @param null|mixed $default
+     */
+    public static function first(array $array, callable $callback = NULL, $default = NULL)
+    {
+        if (is_null($callback)) {
+            if (empty($array)) {
+                return value($default);
+            }
+            foreach ($array as $item) {
+                return $item;
+            }
+        }
+        foreach ($array as $key => $value) {
+            if (call_user_func($callback, $value, $key)) {
+                return $value;
+            }
+        }
+        return value($default);
+    }
+
+    /**
+     * Return the last element in an array passing a given truth test.
+     *
+     * @param null|mixed $default
+     */
+    public static function last(array $array, callable $callback = NULL, $default = NULL)
+    {
+        if (is_null($callback)) {
+            return empty($array) ? value($default) : end($array);
+        }
+        return static::first(array_reverse($array, TRUE), $callback, $default);
+    }
+
+    /**
+     * 用键名(key)重新组合数组
+     *
      * @param $array array 原数组
      * @param $key string 组成新数组的主键的字段
+     *
      * @return array
      */
-    public static function array_under_reset(array $array, $key = "id")
+    public static function arrayResetKey(array $array, $key = "id")
     {
-        if (!is_array($array)) return $array;
+        $ret = [];
+        if (!static::accessible($array)) {
+            return $array;
+        }
         foreach ($array as $k => $val) {
             if (isset($val[$key])) {
                 $new_key = $val[$key];
                 unset($array[$k]);
-                $array[$new_key] = $val;
+                $ret[$new_key] = $val;
             }
         }
-        return $array;
+        return $ret;
     }
 
     /**
      * 转换关联数组为索引数组可用格式(饼图专用)
+     *
      * @param array $arr
-     * @param type $mode 0标题位置后面跟着数字,1标题位置仅标题
-     * @return Arr  exp[0=>[$name, $num],1=>[$name, $num]]
+     * @param integer $mode 0标题位置后面跟着数字,1标题位置仅标题
+     *
+     * @return array  exp[0=>[$name, $num],1=>[$name, $num]]
      */
-    public static function to_pie(array $arr, $mode = 0)
+    public static function toPie(array $arr, $mode = 0)
     {
         $formatPieChart = [];
         foreach ($arr as $key => $value) {
-            $value = money_float($value);
+            $value = NumberHelper::moneyFloat($value);
             $name = $key;
             if ($mode == 0) {
                 $name = $key . "     " . $value;
@@ -56,11 +112,13 @@ class ArrayHelper
 
     /**
      * 使用$key_map替换数组中的索引名字
+     *
      * @param array $source_arr 原数组
      * @param string $key_map 索引名映射数组 e.g.[src_key=>dest_key]
+     *
      * @return array
      */
-    public static function array_keys_replace(array &$source_arr, array $key_map = [])
+    public static function arrayKeysReplace(array &$source_arr, array $key_map = [])
     {
         if (empty($key_map)) {
             return $source_arr;
@@ -75,65 +133,38 @@ class ArrayHelper
     }
 
     /**
-     * array_merge但是保留key(当索引是数字时,array_merge会重新设置索引)
-     * @param array $source_arr1 数组1
-     * @param string $source_arr2 数组2
-     * @return array 目标数组
-     */
-    public static function array_merge_plus(array $source_arr1)
-    {
-        $args_num = func_num_args();
-        $args_arr = func_get_args();
-        for ($i = 1; $i < $args_num; $i++) {
-            foreach ($args_arr[$i] as $key => $value) {
-                $source_arr1[$key] = $value;
-            }
-        }
-        return $source_arr1;
-    }
-
-    /**
-     * 数组合并,只合并数组一值为空,数组二值不为空的项
-     * @param $arr1
-     * @param $arr2
-     * @return mixed
-     */
-    public function array_merge_not_empty($arr1, $arr2)
-    {
-        foreach ($arr1 as $key => $value) {
-            if (empty($arr1[$key]) && !empty($arr2[$key])) {
-                $arr1[$key] = $arr2[$key];
-            }
-
-        }
-        return $arr1;
-    }
-
-    /**
-     * 多数组合并,不理会键名
-     * @param array $source_arr
+     * 数组合并,只合并数组一值为空,后续数组值不为空的项
+     *
+     * @param array ...$arrays
+     *
      * @return array
      */
-    public static function array_expand(array $source_arr)
+    public function arrayMergeNotEmpty(array ...$arrays)
     {
-        $args_num = func_num_args();
-        $args_arr = func_get_args();
-        for ($i = 1; $i < $args_num; $i++) {
-            $source_arr = array_merge($source_arr, $args_arr[$i]);
+        $ret_arr = [];
+        foreach ($arrays as $index => $array) {
+            if ($index == 0) {
+                $ret_arr = $array;
+                continue;
+            }
+            foreach ($ret_arr as $key => $value) {
+                if (empty($ret_arr[$key]) && !empty($array[$key])) {
+                    $ret_arr[$key] = $array[$key];
+                }
+            }
         }
-        return $source_arr;
+        return $ret_arr;
     }
 
-
     /**
-     * 判断数组是否为索引数组
+     * 判断数组是否为索引数组(key是数字)
      */
-    public static function is_indexed_array($arr)
+    public static function isIndexedArray($arr)
     {
-        if (is_array($arr)) {
+        if (static::accessible($arr)) {
             return count(array_filter(array_keys($arr), 'is_string')) === 0;
         }
-        return false;
+        return FALSE;
     }
 
     /**
@@ -146,98 +177,86 @@ class ArrayHelper
      *   5 => 'd',
      * ]
      */
-    public static function is_continuous_indexed_array($arr)
+    public static function isContinuousIndexedArray($arr)
     {
-        if (is_array($arr)) {
+        if (static::accessible($arr)) {
             $keys = array_keys($arr);
             return $keys == array_keys($keys);
         }
-        return false;
+        return FALSE;
     }
 
 
     /**
-     * 判断数组是否为关联数组
+     * 判断数组是否为关联数组(key是字符串)
      */
-    public static function is_assoc_array($arr)
+    public static function isAssocArray($arr)
     {
-        if (is_array($arr)) {
-            // return !is_indexed_array($arr);
+        if (static::accessible($arr)) {
             return count(array_filter(array_keys($arr), 'is_string')) === count($arr);
         }
-        return false;
+        return FALSE;
     }
 
 
     /**
      * 判断数组是否为混合数组
      */
-    public static function is_mixed_array($arr)
+    public static function isMixedArray($arr)
     {
-        if (is_array($arr)) {
+        if (static::accessible($arr)) {
             $count = count(array_filter(array_keys($arr), 'is_string'));
             return $count !== 0 && $count !== count($arr);
         }
-        return false;
+        return FALSE;
     }
 
     /**
-     * 提取数组中的部分字段
+     * 剔除数组中的部分字段
+     *
      * @param array $source_arr
-     * @param array $fields ,可以传多个字符串,也可以传一个key组成的数组,e.g. ['key1','key2','key3']
+     * @param array $fields ,['key1','key2','key3'] or "key1,key2,key3"
+     * @param array $mode 1:仅保留$fields里面的字段,2:删除$fields里面的字段
+     *
      * @return array
      */
-    public static function array_column_plus($source_arr, $fields)
+    public static function arrayColumn($source_arr, $fields, $mode=1)
     {
         if (empty($source_arr)) {
             return $source_arr;
         }
         if (is_string($fields)) {
-            if (false === strpos($fields, ',')) {
-                return array_column($source_arr, $fields);
-            }
-            $fields = explode(',', $fields);
-        }
-        if (is_array($fields)) {
-            $destination = array_map(function ($one) use ($fields) {
-                $temp = $this->array_value_filter($one, $fields);
-                return $temp;
-            }, $source_arr);
-            return $destination;
-        }
-    }
-
-    /**
-     * 提取数组中的部分字段
-     * @param array $source_arr
-     * @param array $fields ,可以传多个字符串,也可以传一个key组成的数组,e.g. ['key1','key2','key3']
-     * @return array
-     */
-    public static function array_value_filter($source_arr, $fields)
-    {
-        if (empty($source_arr)) {
-            return $source_arr;
-        }
-        if (is_string($fields)) {
-            if (false === strpos($fields, ',')) {
+            if (FALSE === strpos($fields, ',')) {
                 return $source_arr;
             }
             $fields = explode(',', $fields);
         }
-        if (is_array($fields)) {
-            foreach ($source_arr as $key => $value) {
-                if (false === in_array($key, $fields)) {
-                    unset($source_arr[$key]);
+        if (static::accessible($fields)) {
+            if ($mode == 1) {
+                foreach ($source_arr as $key => $value) {
+                    if (FALSE === in_array($key, $fields)) {
+                        unset($source_arr[$key]);
+                    }
+                }
+            } else {
+                foreach ($fields as $value) {
+                    unset($source_arr[$value]);
                 }
             }
+
             return $source_arr;
         }
     }
 
+
     /**
-     * 二维数组分组
+     * 分组为二维数组
+     * @param array $arr
+     * @param string $key
+     *
+     * @return array
      */
-    public static function array_group($arr, $key)
+    public static function arrayGroup(array $arr, string $key)
     {
         $grouped = [];
         foreach ($arr as $value) {
@@ -248,32 +267,26 @@ class ArrayHelper
             $args = func_get_args();
             foreach ($grouped as $index => $value) {
                 $parms = array_merge([$value], array_slice($args, 2, func_num_args()));
-                $grouped[$index] = call_user_func_array('array_group', $parms);
+                $grouped[$index] = static::arrayGroup($parms);
             }
         }
         return $grouped;
     }
 
     /**
-     * 二维数组提取数组(如:角色s->菜单s)
-     * @param $source 原二维数组
-     * @param $column_field 提取的数组字段名
-     * @param null $unique_id 用来做unique的字段
-     * @return array
+     * 返回列表load后的列表
+     *
+     * @param $list 列表
+     * @param $load_key load的数据字段名
+     *
+     * @return array 合并后的load_key对应的load_list
      */
-    public static function array_column_merge($source, $column_field, $unique_id = null)
+    public static function arrayColumnMerge($list, $load_key)
     {
         $ret = [];
-        foreach ($source as $key => $value) {
-            foreach ($value[$column_field] as $key2 => $value2) {
-                if (!empty($unique_id)) {
-                    //unique的
-                    $index = $value2[$unique_id];
-                    $ret[$index] = $value2;
-                } else {
-                    //不unique的
-                    $ret[] = $value2;
-                }
+        foreach ($list as $key => $value) {
+            foreach ($value[$load_key] as $key2 => $value2) {
+                $ret[] = $value2;
             }
         }
         return array_values($ret);
@@ -281,15 +294,18 @@ class ArrayHelper
 
     /**
      * 数组分级(父子)排序
+     *
      * @param array $array
      * @param array $ret
      * @param array $param
+     *
      * @return array|null
      */
-    public static function array_sort_child(array &$array, array &$ret, $param = [])
+    public static function arraySortChild(array &$array, array &$ret, $param = [])
     {
 //      初始化
-        $default_param = ['title_name' => 'title', 'id_name' => 'id', 'pid_name' => 'pid', 'pid_root' => 0, 'level' => 0];
+        $default_param =
+            ['title_name' => 'title', 'id_name' => 'id', 'pid_name' => 'pid', 'pid_root' => 0, 'level' => 0];
         $param = array_merge($default_param, $param);
         $id_name = $param['id_name'];
         $pid_name = $param['pid_name'];
@@ -299,8 +315,8 @@ class ArrayHelper
         $level++;
 //        循环的作用是为了找到$pid_root下的所有child
         foreach ($array as $key => $value) {
-            if (false == isset($value[$pid_name])) {
-                return null;
+            if (FALSE == isset($value[$pid_name])) {
+                return NULL;
             }
             if ($value[$pid_name] == $pid_root) {
                 unset($array[$key]);
@@ -320,21 +336,23 @@ class ArrayHelper
 
     /**
      * 数组转换成树
+     *
      * @param array $list 要转换的数据集
      * @param string $pk ID标记字段
      * @param string $pid parent标记字段
      * @param string $child 子代key名称
      * @param string $root 返回的根节点ID
      * @param string $strict 默认严格模式
+     *
      * @return array
      */
-    public static function array_to_tree($list, $pk = 'id', $pid = 'pid', $child = 'child', $root = 0, $strict = true)
+    public static function arrayToTree($list, $pk = 'id', $pid = 'pid', $child = 'child', $root = 0, $strict = TRUE)
     {
         // 创建Tree
-        $tree = array();
-        if (is_array($list)) {
+        $tree = [];
+        if (static::accessible($list)) {
             // 创建基于主键的数组引用
-            $refer = array();
+            $refer = [];
             foreach ($list as $key => $data) {
                 $refer[$data[$pk]] =& $list[$key];
             }
@@ -342,7 +360,7 @@ class ArrayHelper
                 // 判断是否存在parent
                 $parent_id = $data[$pid];
                 //是否根节点
-                if ($parent_id === null || (int)$root === $parent_id) {
+                if ($parent_id === NULL || (int)$root === $parent_id) {
                     // 根节点
                     $tree[] =& $list[$key];
                 } else {
@@ -356,7 +374,7 @@ class ArrayHelper
                         $parent[$child][] =& $list[$key];
                     } else {
                         //严格模式,没有找到parent就删除
-                        if ($strict === false) {
+                        if ($strict === FALSE) {
                             $tree[] =& $list[$key];
                         }
                     }
@@ -368,20 +386,22 @@ class ArrayHelper
 
     /**
      * 返回类型一定是数组
+     *
      * @param $value
      * @param string $needle
+     *
      * @return array|string[]
      */
-    public static function to_array($value, $needle = ',')
+    public static function ToTree($value, $needle = ',')
     {
         if (empty($value)) {
             return [];
         }
-        if (is_array($value)) {
+        if (static::accessible($value)) {
             return $value;
         }
         if (is_string($value)) {
-            return strpos($value, $needle) == false ? [$value] : explode($needle, $value);
+            return strpos($value, $needle) == FALSE ? [$value] : explode($needle, $value);
         }
         if (is_numeric($value)) {
             return [$value];
@@ -392,16 +412,18 @@ class ArrayHelper
 
     /**
      * 返回json数据的时候,map格式可能出现顺序问题
+     *
      * @param $arr
+     *
      * @return array [ 'id' => $key,'val' => $value]
      */
-    public static function mapToArray($arr)
+    public static function mapToList($arr,$name1='id',$name2='val')
     {
         $ret = [];
         if (!empty($arr)) {
-            if (static::is_assoc_array($arr)) {
+            if (static::isAssocArray($arr)) {
                 foreach ($arr as $key => $value) {
-                    $ret[$key] = static::mapToArray($value);
+                    $ret[$key] = static::mapToList($value);
                 }
             } else {
                 foreach ($arr as $key => $value) {

@@ -23,12 +23,12 @@ class NumberHelper
      * @param $div int 除数,例如要百分比时用，默认2位
      * @return double or int
      */
-    public static function money_float($float, $size = 2, $div = 1)
+    public static function moneyFloat($float, $size = 2, $div = 1)
     {
         if (is_array($float)) {
             $return = [];
             foreach ($float as $key => $value) {
-                $return[$key] = static::money_float($value, $size, $div);
+                $return[$key] = static::moneyFloat($value, $size, $div);
             }
             return $return;
         }
