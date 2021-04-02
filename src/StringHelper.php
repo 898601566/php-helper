@@ -169,4 +169,21 @@ class StringHelper
     {
         return $search === '' ? $subject : array_reverse(explode($search, $subject, 2))[0];
     }
+
+    /**
+     * 确定给定字符串是否以给定子字符串结束。
+     *
+     * @param string $haystack
+     * @param array|string $needles
+     * @return bool
+     */
+    public static function endsWith($haystack, $needles)
+    {
+        foreach ((array) $needles as $needle) {
+            if (substr($haystack, -strlen($needle)) === (string) $needle) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
