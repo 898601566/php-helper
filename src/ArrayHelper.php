@@ -260,7 +260,7 @@ class ArrayHelper
     {
         $grouped = [];
         foreach ($arr as $value) {
-            $new_key = $value[$key] ?? '';
+            $new_key = !empty($value[$key]) ? $value[$key] : '';
             $grouped[$new_key][] = $value;
         }
         if (func_num_args() > 2) {
@@ -447,7 +447,8 @@ class ArrayHelper
     public static function unique(array $array): array
     {
         $result = [];
-        foreach ($array ?? [] as $key => $item) {
+        $array = !empty($array) ? $array : [];
+        foreach ($array as $key => $item) {
             if (is_array($item)) {
                 $result[$key] = self::unique($item);
             } else {
