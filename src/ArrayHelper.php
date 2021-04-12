@@ -158,6 +158,9 @@ class ArrayHelper
 
     /**
      * 判断数组是否为索引数组(key是数字)
+     * @param $arr
+     *
+     * @return bool
      */
     public static function isIndexedArray($arr)
     {
@@ -328,7 +331,7 @@ class ArrayHelper
                 //递归找$value['id']下的所有child
                 $param['pid_root'] = $value[$id_name];
                 $param['level'] = $level;
-                static::array_sort_child($array, $ret, $param);
+                static::arraySortChild($array, $ret, $param);
             }
         }
         return $ret;
@@ -456,7 +459,7 @@ class ArrayHelper
             }
         }
 
-        if (! self::isAssoc($result)) {
+        if (! self::isAssocArray($result)) {
             return array_unique($result);
         }
 
