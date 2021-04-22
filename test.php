@@ -2,33 +2,21 @@
 require_once __DIR__ . "/vendor/autoload.php";
 error_reporting(E_ALL);
 ini_set('display_errors', 'ON');
-$a = [
-    [
-        'aaa' => 1,
-        'bbb' => [
-            ['a' => 'a1', 'b' => 1],
-            ['a' => 'a2', 'b' => 2],
-            ['a' => 'a3', 'b' => 3],
-        ],
-    ],
-    [
-        'aaa' => 2,
-        'bbb' => [
-            ['a' => 'a11', 'b' => 21],
-            ['a' => 'a12', 'b' => 22],
-            ['a' => 'a13', 'b' => 23],
-        ],
-    ],
-    [
-        'aaa' => 3,
-        'bbb' => [
-            ['a' => 'a21', 'b' => 221],
-            ['a' => 'a22', 'b' => 222],
-            ['a' => 'a23', 'b' => 223],
-        ],
-    ],
+$user_message_list=[
+    ['id'=>1,'content'=>'content1','reply_id'=>'0'],
+    ['id'=>2,'content'=>'content2','reply_id'=>'1'],
+    ['id'=>3,'content'=>'content3','reply_id'=>'1'],
+    ['id'=>4,'content'=>'content4','reply_id'=>'2'],
+    ['id'=>5,'content'=>'content5','reply_id'=>'1'],
+    ['id'=>6,'content'=>'content6','reply_id'=>'4'],
+    ['id'=>7,'content'=>'content7','reply_id'=>'3'],
 ];
-
-$ret = Helper\ArrayHelper::arrayColumnMerge($a, 'bbb', 'a');
-sdump($a, $ret);
+$user_message_list2 = $user_message_list;
+$list =[];
+\Helper\ArrayHelper::unlimitList($user_message_list, $list, 0,
+    'id','reply_id');
+$list2 =[];
+\Helper\ArrayHelper::unlimitTree($user_message_list2, $list, 0,
+    'id','reply_id');
+sdump($list, $list2);
 

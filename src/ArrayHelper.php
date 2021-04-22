@@ -158,6 +158,7 @@ class ArrayHelper
 
     /**
      * 判断数组是否为索引数组(key是数字)
+     *
      * @param $arr
      *
      * @return bool
@@ -223,7 +224,7 @@ class ArrayHelper
      *
      * @return array
      */
-    public static function arrayColumn($source_arr, $fields, $mode=1)
+    public static function arrayColumn($source_arr, $fields, $mode = 1)
     {
         if (empty($source_arr)) {
             return $source_arr;
@@ -254,6 +255,7 @@ class ArrayHelper
 
     /**
      * 分组为二维数组
+     *
      * @param array $arr
      * @param string $key
      *
@@ -420,7 +422,7 @@ class ArrayHelper
      *
      * @return array [ 'id' => $key,'val' => $value]
      */
-    public static function mapToList($arr,$name1='id',$name2='val')
+    public static function mapToList($arr, $name1 = 'id', $name2 = 'val')
     {
         $ret = [];
         if (!empty($arr)) {
@@ -443,6 +445,7 @@ class ArrayHelper
 
     /**
      * 使数组元素唯一,可递归
+     *
      * @param array $array
      *
      * @return array
@@ -459,10 +462,58 @@ class ArrayHelper
             }
         }
 
-        if (! self::isAssocArray($result)) {
+        if (!self::isAssocArray($result)) {
             return array_unique($result);
         }
 
         return $result;
+    }
+
+    /**
+     * 无限极列表
+     * @param $user_message_list
+     * @param $list
+     * @param string $master_id
+     * @param string $parent_field
+     * @param string $chield_field
+     */
+    public static function unlimitList(&$user_message_list, &$ret, $master_id = '0', $parent_field = 'id',
+        $chield_field = 'pid')
+    {
+        foreach ($user_message_list as $key => $value) {
+            if ($value[$chield_field] == $master_id) {
+                $ret[] = $value;
+                unset($user_message_list[$key]);
+                static::unlimitList($user_message_list, $ret, $value[$parent_field],
+                    $parent_field, $chield_field);
+            }
+        }
+    }
+
+    /**
+     * 无限极树
+     * @param $list
+     * @param $ret
+     * @param string $master_id
+     * @param string $parent_field
+     * @param string $chield_field
+     */
+    public static function unlimitTree(&$list, &$ret, $master_id = '0', $parent_field = 'id',
+        $chield_field = 'pid')
+    {
+        $temp_list = [];
+        foreach ($list as $key => $value) {
+            if ($value[$chield_field] == $master_id) {
+                static::unlimitTree($list, $value, $value[$parent_field],
+                    $parent_field, $chield_field);
+                $temp_list[] = $value;
+                unset($list[$key]);
+            }
+        }
+        if (!empty($ret)) {
+            $ret['child'][] = $temp_list;
+        } else {
+            $ret = $temp_list;
+        }
     }
 }
