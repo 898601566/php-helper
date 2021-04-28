@@ -2,6 +2,7 @@
 require_once __DIR__ . "/vendor/autoload.php";
 error_reporting(E_ALL);
 ini_set('display_errors', 'ON');
+sdump(\Helper\NumberHelper::hidePhone([13132693017,13132693018]));
 $user_message_list=[
     ['id'=>1,'content'=>'content1','reply_id'=>'0'],
     ['id'=>2,'content'=>'content2','reply_id'=>'1'],
@@ -18,5 +19,8 @@ $list =[];
 $list2 =[];
 \Helper\ArrayHelper::unlimitTree($user_message_list2, $list, 0,
     'id','reply_id');
-sdump($list, $list2);
+sdump($list, $list2,
+\Helper\NumberHelper::hidePhone([13132693017]));
+
+;
 
