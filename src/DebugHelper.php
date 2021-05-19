@@ -76,6 +76,16 @@ class DebugHelper
         echo '<br>';
     }
 
+    /**
+     * 分隔符
+     * @param $str
+     */
+    public static function print($str)
+    {
+        echo '<br>';
+        echo $str;
+        echo '<br>';
+    }
 
     public
     static function printSqlLog()

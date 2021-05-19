@@ -35,12 +35,12 @@ class ResponseHelper
     /**
      * html格式返回
      *
-     * @param array $response
+     * @param string $response
      * @param int $code
      *
      * @return bool
      */
-    public static function html(array $response, $code = 0)
+    public static function html(string $response='', $code = 0)
     {
         if (!empty($code)) {
             // 发送状态码
