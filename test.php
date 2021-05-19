@@ -2,6 +2,10 @@
 require_once __DIR__ . "/vendor/autoload.php";
 error_reporting(E_ALL);
 ini_set('display_errors', 'ON');
+
+sdump($_REQUEST,\Helper\RequestHelper::input(['iii'=>'sdfsdf','abc'=>'qqq']));
+\Helper\ResponseHelper::json(\Helper\ResponseHelper::getResponseExample(6566));
+
 sdump(\Helper\NumberHelper::hidePhone([13132693017,13132693018]));
 $user_message_list=[
     ['id'=>1,'content'=>'content1','reply_id'=>'0'],

@@ -18,39 +18,57 @@ class ResponseHelper
      * Response格式
      *
      * @param array $data
-     * @param int $system 是否返回系统参数
      *
      * @return array
      */
-    public static function getResponseExample($data = [], $system = 0)
+    public static function getResponseExample(array $data = [], $code = '0', $msg = 'success')
     {
+        $data = !empty($data) ? $data : new \stdClass();
         $ret = [
             'code' => 0,
             'msg' => 'success',
             'data' => $data,
         ];
-        if (!empty($system)) {
-            if (env('app_debug', FALSE)) {
-                $runtime = static::getRuntime();
-                $ret['system'] = [
-                    'request_time' => \request()->time(),
-                    'runtime' => $runtime,
-                ];
-
-            }
-        }
         return $ret;
     }
 
     /**
-     * 获取运行时间
+     * html格式返回
+     *
+     * @param array $response
+     * @param int $code
+     *
+     * @return bool
      */
-    public static function getRuntime()
+    public static function html(array $response, $code = 0)
     {
-        $app = app();
-        $runtime = number_format(microtime(TRUE) - $app->getBeginTime(), 10, '.', '');
-        $runtime = number_format((float)$runtime, 6) . 's';
-        return $runtime;
+        if (!empty($code)) {
+            // 发送状态码
+            http_response_code($code);
+        }
+        echo $response;
+        exit;
+        return TRUE;
+    }
+
+    /**
+     * json格式返回
+     *
+     * @param array $response
+     * @param int $code
+     *
+     * @return bool
+     */
+    public static function json(array $response, $code = 0)
+    {
+        header("Content-Type:application/json; charset=utf-8;");
+        if (!empty($code)) {
+            // 发送状态码
+            http_response_code($code);
+        }
+        echo json_encode($response, JSON_UNESCAPED_UNICODE);
+        exit;
+        return TRUE;
     }
 
 }
