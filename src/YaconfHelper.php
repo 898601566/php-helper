@@ -12,7 +12,7 @@ namespace Helper;
 
 class YaconfHelper
 {
-    protected static string $app_name = '';
+    protected static $app_name = '';
 
     /**
      * 设置项目名称
