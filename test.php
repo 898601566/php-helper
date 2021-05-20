@@ -6,8 +6,10 @@ ini_set('display_errors', 'ON');
 set_error_handler([\Helper\exception\ErrorHandler::class, 'render']);
 //        设置异常处理
 set_exception_handler([\Helper\exception\ExceptionHandler::class, 'render']);
+
+\Helper\exception\BaseException::throwException(\Helper\exception\SystemException::INVALID_PARAMETER);
 trigger_error("notice, go on!", E_USER_NOTICE);
-trigger_error("notice, go on!", E_USER_NOTICE);
+
 sdump($_REQUEST,\Helper\RequestHelper::input(['iii'=>'sdfsdf','abc'=>'qqq']));
 \Helper\ResponseHelper::json(\Helper\ResponseHelper::getResponseExample(6566));
 

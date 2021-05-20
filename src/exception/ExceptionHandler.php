@@ -15,29 +15,22 @@ use Helper\ResponseHelper;
 class ExceptionHandler
 {
     /**
-     * 渲染异常
+     * 渲染自定义异常
      *
      * @param Exception $e
      *
      */
     public static function render(\Throwable $e)
     {
-
-//        $result = [
-//            'code' => 500,
-//            'msg' => '对不起,有一个特殊错误出现,请联系运营',
-//            'data' => [],
-//        ];
         if ($e instanceof BaseException) {
             $result = $e->getInfo();
             ResponseHelper::json($result);
         }
-        static::printException($e);
         return TRUE;
     }
 
     /**
-     * 测试的时候打印异常
+     * 测试的时候打印异常,常用于打印系统级异常
      *
      * @param Exception $e
      * @param $log

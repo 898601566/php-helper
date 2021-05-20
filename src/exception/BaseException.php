@@ -10,21 +10,14 @@ namespace Helper\exception;
 class BaseException extends \Exception
 {
 
-    protected $info = [
-        'code' => 0,
-        'msg' => '',
-        'data' => [],
-    ];
-
     /**
      * 构造函数，设置异常的信息(用于自定义)
      *
      * @param array $params 关联数组应包含code、msg和data，且不应该是空值
      */
-    public function __construct($params = [], $msg = '', $data = [])
+    public function __construct($message = [], $code = '', Throwable $previous = null)
     {
-        parent::__construct();
-        $this->setInfo($params, $msg, $data);
+        parent::__construct($message,$code,$previous);
     }
 
 
@@ -34,39 +27,11 @@ class BaseException extends \Exception
      */
     public function getInfo()
     {
-        return $this->info;
-    }
-
-    /**
-     * 设置异常的信息(用于自定义)
-     *
-     * @param array $params 关联数组 key可以为code,msg,data
-     * @param string $msg
-     * @param array $data
-     *
-     * @return $this
-     */
-    protected function setInfo($params = [], $msg = '', $data = [])
-    {
-        if (!empty($params)) {
-            if (!empty($params['code'])) {
-                $this->info['code'] = $params['code'];
-            }
-            if (!empty($params['msg'])) {
-                $this->info['msg'] = $params['msg'];
-            }
-            if (!empty($params['data'])) {
-                $this->info['data'] = array_merge($this->info['code'], $params['data']);
-            }
-        }
-
-        if (!empty($msg)) {
-            $this->info['msg'] = $msg;
-        }
-        if (!empty($data)) {
-            $this->info['data'] = $data;
-        }
-        return $this;
+        return $info = [
+            'code' => $this->getCode(),
+            'msg' => $this->getMessage(),
+            'data' => [],
+        ];
     }
 
     /**
@@ -75,10 +40,27 @@ class BaseException extends \Exception
      * @param array $exception_config
      *
      */
-    public static function throwException(array $exception_config, $msg = '', $data = '')
+    public static function throwException(array $exception_config, $msg = '', $code = '')
     {
-        $exception = new static();
-        $exception->setInfo($exception_config, $msg, $data);
+        $the_msg = '';
+        $the_code = '';
+        if (!empty($exception_config)) {
+            if (!empty($exception_config['code'])) {
+                $the_code = $exception_config['code'];
+            }
+            if (!empty($exception_config['msg'])) {
+                $the_msg = $exception_config['msg'];
+            }
+        }
+
+        if (!empty($msg)) {
+            $the_msg = $msg;
+        }
+
+        if (!empty($code)) {
+            $the_code = $code;
+        }
+        $exception = new static($the_msg,$the_code);
         throw $exception;
     }
 
