@@ -11,7 +11,6 @@ use Helper\ResponseHelper;
  * 如果要使用先调用 set_exception_handler([\Helper\exception\ExceptionHandler::class, 'render']);
  * 如果要用于线上建议先重写render方法;
  */
-
 class ExceptionHandler
 {
     /**

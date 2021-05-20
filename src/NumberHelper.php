@@ -9,6 +9,7 @@ namespace Helper;
 
 
 /**
+ * 数字函数类
  * Class NumberHelper
  * @package Helper
  */

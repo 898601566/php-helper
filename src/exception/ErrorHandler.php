@@ -9,8 +9,8 @@ use Helper\ResponseHelper;
 /*
  * 重写Handle的render方法，实现自定义异常消息
  * 如果要使用先调用 set_error_handler([\Helper\exception\ErrorHandler::class, 'render']);
+ * 触发错误用trigger_error("notice, go on!", E_USER_NOTICE);
  */
-
 class ErrorHandler
 {
     /**

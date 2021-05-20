@@ -8,6 +8,7 @@
 namespace Helper;
 
 /**
+ * 数组类
  * Class ArrayHelper
  * @package Helper
  */

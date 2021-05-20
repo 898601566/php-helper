@@ -9,6 +9,7 @@ namespace Helper;
 
 
 /**
+ * Curl调用网络资源
  * Class CurlFunc
  * @package Helper
  */

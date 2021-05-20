@@ -8,8 +8,11 @@
 namespace Helper;
 
 
-
-
+/**
+ * yaconf加载
+ * Class YaconfHelper
+ * @package Helper
+ */
 class YaconfHelper
 {
     protected static $app_name = '';

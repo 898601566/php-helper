@@ -8,6 +8,7 @@
 namespace Helper;
 
 /**
+ * 请求类
  * Class RequestHelper
  * @package Helper
  */

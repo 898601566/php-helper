@@ -17,6 +17,7 @@ use Helper\traits\InstanceTrait;
 
 /**
  * Env管理类
+ * 需要先调用load加载文件
  * @package think
  */
 class EnvHelper implements ArrayAccess

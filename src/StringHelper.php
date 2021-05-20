@@ -8,6 +8,7 @@
 namespace Helper;
 
 /**
+ * 字符串类
  * Class StringHelper
  * @package Helper
  */

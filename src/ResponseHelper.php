@@ -8,6 +8,7 @@
 namespace Helper;
 
 /**
+ * 响应类
  * Class ResponseHelper
  * @package Helper
  */

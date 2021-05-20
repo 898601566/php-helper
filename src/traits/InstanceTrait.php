@@ -3,6 +3,7 @@
 namespace Helper\traits;
 
 /**
+ * 单例模式类
  * Trait InstanceTrait
  * @package common\traits
  */
