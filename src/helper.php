@@ -22,13 +22,15 @@ if (!function_exists('sdump')) {
      */
     function sdump(...$param)
     {
-        return \Helper\DebugHelper::sdump($param);
+        return \Helper\DebugHelper::sdump(...$param);
     }
 }
+
 if (!function_exists('env')) {
 
     /**
      * 获取.env配置相应内容
+     *
      * @param $var
      * @param null $default
      *
@@ -44,6 +46,7 @@ if (!function_exists('yaconf')) {
 
     /**
      * 获取.yaconf配置相应内容
+     *
      * @param $var
      * @param null $default
      *
