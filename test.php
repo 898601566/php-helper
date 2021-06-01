@@ -6,8 +6,18 @@ ini_set('display_errors', 'ON');
 set_error_handler([\Helper\exception\ErrorHandler::class, 'render']);
 //        设置异常处理
 set_exception_handler([\Helper\exception\ExceptionHandler::class, 'render']);
-
-\Helper\exception\BaseException::throwException(\Helper\exception\SystemException::INVALID_PARAMETER);
+$a = "new string";
+$d = "new string2";
+$c = $b = $a;
+xdebug_debug_zval( 'a' );
+print_r(memory_get_usage());
+unset( $b, $c );
+xdebug_debug_zval( 'a' );
+xdebug_debug_zval( 'b' );
+xdebug_debug_zval( 'd' );
+$a = 1;
+print_r(memory_get_usage());
+//\Helper\exception\BaseException::throwException(\Helper\exception\SystemException::INVALID_PARAMETER);
 trigger_error("notice, go on!", E_USER_NOTICE);
 
 sdump($_REQUEST,\Helper\RequestHelper::input(['iii'=>'sdfsdf','abc'=>'qqq']));

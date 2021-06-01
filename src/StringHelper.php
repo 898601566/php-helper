@@ -148,6 +148,18 @@ class StringHelper
     }
 
     /**
+     * 通过正则表达式,将数据库类型转换为php类型
+     */
+    public static function sqlTypeToJavaType($str)
+    {
+        $ret = preg_replace("/.*int.*/", 'Integer', $str);
+        $ret = preg_replace("/.*bigint.*/", 'Long', $str);
+        $ret = preg_replace("/.*(char|text|date).*/", 'String', $ret);
+        $ret = preg_replace("/.*deci.*/", 'Float', $ret);
+        return $ret;
+    }
+
+    /**
      * 返回$subject中$search前面内容
      *
      * @param string $subject
