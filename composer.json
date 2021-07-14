@@ -11,8 +11,7 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "php": ">=7.2",
-        "ext-xdebug": "*"
+        "php": ">=7.2"
     },
     "autoload": {
         "psr-4": {
