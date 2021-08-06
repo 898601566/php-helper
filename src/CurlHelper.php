@@ -22,7 +22,7 @@ class CurlHelper
      *
      * @return mixed
      */
-    public static function curlPost($url, array $params = [], $token = '')
+    public static function curlPost($url, array $params = [], $header = [])
     {
         $data_string = json_encode($params);
         $ch = curl_init();
@@ -41,11 +41,11 @@ class CurlHelper
 //    传送数据
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
 //    设置 HTTP 头字段的数组
-        $header = [
-            'Content-Type: application/json',
-        ];
-        if (!empty($token)) {
-            $header['token'] = "token:$token";
+        if (empty($header['Content-Type'])) {
+            $header['Content-Type'] = 'Content-Type:application/json';
+        }
+        foreach ($header as $key => $value) {
+            $header[$key] = "$key:$value";
         }
         curl_setopt(
             $ch, CURLOPT_HTTPHEADER, $header
