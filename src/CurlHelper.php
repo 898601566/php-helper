@@ -19,6 +19,7 @@ class CurlHelper
     /**
      * @param string $url post请求地址
      * @param array $params
+     * @param array $header
      *
      * @return mixed
      */
@@ -42,7 +43,7 @@ class CurlHelper
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
 //    设置 HTTP 头字段的数组
         if (empty($header['Content-Type'])) {
-            $header['Content-Type'] = 'Content-Type:application/json';
+            $header['Content-Type'] = 'application/json';
         }
         foreach ($header as $key => $value) {
             $header[$key] = "$key:$value";
