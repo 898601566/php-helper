@@ -4,7 +4,7 @@ namespace Helper;
 
 use Helper\traits\InstanceTrait;
 
-class Config
+class ConfigHelper
 {
     use InstanceTrait;
 
@@ -36,7 +36,7 @@ class Config
      *
      * @return array|mixed
      */
-    public function load($name)
+    public static function load($name)
     {
         $ret = [];
         if (!empty($name)) {
