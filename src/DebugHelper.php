@@ -15,19 +15,20 @@ namespace Helper;
  */
 class DebugHelper
 {
+    /**
+     * 打印数据然后退出
+     * @param ...$param
+     */
     public static function sdump(...$param)
     {
         static::_sdump(...$param);
         static::end();
     }
 
-    public static function sdumpWithSql(...$param)
-    {
-        static::_sdump(...$param);
-        static::printSqlLog();
-        static::end();
-    }
-
+    /**
+     * 打印数据(配上加载过程)然后退出
+     * @param ...$param
+     */
     public static function sdumpWithTrace(...$param)
     {
         static::_sdump(...$param);
@@ -48,15 +49,18 @@ class DebugHelper
         foreach ($param as $key => $value) {
             if (is_bool($value) || empty($value)) {
                 var_dump($value);
+            } elseif (is_array($value)) {
+                var_export($value);
             } else {
-                print_r($value);
+                static::println($value);
             }
-            static::printBr('next');
+            static::println('next');
         }
     }
 
     /**
-     * 输出</pre>并退出
+     * 告知结束然后退出
+     *
      * @param $str
      */
     protected static function end()
@@ -67,44 +71,29 @@ class DebugHelper
     }
 
     /**
-     * 分隔符
+     * 命令行打印字符串
+     *
+     * @param $str
+     */
+    public static function println($str)
+    {
+        echo $str . "\n";
+    }
+
+    /**
+     * html打印字符串
+     *
      * @param $str
      */
     public static function printBr($str)
     {
-        echo '<br>';
-        echo str_pad($str, 50, '=', STR_PAD_BOTH);
-        echo '<br>';
-    }
-
-    /**
-     * 分隔符
-     * @param $str
-     */
-    public static function print($str)
-    {
-        echo '<br>';
         echo $str;
         echo '<br>';
     }
 
-    public
-    static function printSqlLog()
-    {
-        $log = \think\facade\Log::getLog();
-        if (!empty($log['sql'])) {
-            static::printBr(__FUNCTION__);
-            $sql_source = $log['sql'];
-            $sql = [];
-            foreach ($sql_source as $key => $value) {
-                if (strpos($value, 'SHOW') === FALSE) {
-                    $sql[] = preg_replace('/(\[.*\])([\s\S]+)(\[.*\])/', '$1$3$2', $value);
-                }
-            }
-            print_r($sql);
-        }
-    }
-
+    /**
+     * 打印文件加载过程
+     */
     public static function printFileTrace()
     {
         $file = get_included_files();
@@ -113,7 +102,7 @@ class DebugHelper
             static::printBr(__FUNCTION__);
             foreach ($file as $key => $value) {
                 $value = $value . ' ( ' . number_format(filesize($value) / 1024, 2) . ' KB )';
-                $info[$key] = str_replace($common_path, '', $value,);
+                $info[$key] = str_replace($common_path, '', $value);
             }
             print_r($info);
         }

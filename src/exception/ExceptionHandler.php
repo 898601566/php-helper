@@ -41,14 +41,14 @@ class ExceptionHandler
         ob_start();
         $log = sprintf("<p style='font-size: 36px;'>%s</p>", $e->getMessage());
         $log .= sprintf("<p style='font-size: 20px;'>%s (%s) %s</p>", $e->getFile(), $e->getLine(), "\n<br>");
-        DebugHelper::print("异常信息(message): {$e->getMessage()}");
-        DebugHelper::print("异常文件(file): {$e->getFile()}");
-        DebugHelper::print("异常行号(line): {$e->getLine()}");
+        DebugHelper::printBr("异常信息(message): {$e->getMessage()}");
+        DebugHelper::printBr("异常文件(file): {$e->getFile()}");
+        DebugHelper::printBr("异常行号(line): {$e->getLine()}");
         $trace = $e->getTrace();
         foreach ($trace as $key => $value) {
             if (!empty($value['file']) && !empty($value['line'])) {
                 $log .= sprintf("<p style='font-size: 20px;'>%s (%s) %s</p>", $value['file'], $value['line'], "\n");
-                DebugHelper::print("异常路径(trace): {$value['file']}-{$value['line']}");
+                DebugHelper::printBr("异常路径(trace): {$value['file']}-{$value['line']}");
             }
         }
         $html_content = ob_get_clean();
