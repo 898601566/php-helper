@@ -48,9 +48,11 @@ class CurlHelper
         foreach ($header as $key => $value) {
             $header[$key] = "$key:$value";
         }
-        curl_setopt(
-            $ch, CURLOPT_HTTPHEADER, $header
-        );
+        if (empty($header)) {
+            curl_setopt(
+                $ch, CURLOPT_HTTPHEADER, array_values($header)
+            );
+        }
         $data = curl_exec($ch);
         curl_close($ch);
         return ($data);
@@ -83,21 +85,29 @@ class CurlHelper
      *
      * @return mixed
      */
-    public function curlGet($url, array $data = [], &$httpCode = 0)
+    public function curlGet($url, array $data = [], $header = [])
     {
         $ch = curl_init();
         if (!empty($data)) {
             $data = is_array($data) ? http_build_query($data) : trim($data, '&');
             $url = rtrim($url, '&') . (strpos($url, '?') === FALSE ? '?' : '&') . $data;
+            $url = rtrim($url, '&');
         }
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-
+//    设置 HTTP 头字段的数组
+        if (empty($header)) {
+            foreach ($header as $key => $value) {
+                $header[$key] = "$key:$value";
+            }
+            curl_setopt(
+                $ch, CURLOPT_HTTPHEADER, array_values($header)
+            );
+        }
 //    证书校验
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, TRUE);
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
         $file_contents = curl_exec($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
         return $file_contents;
     }
