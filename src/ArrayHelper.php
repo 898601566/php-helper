@@ -231,26 +231,36 @@ class ArrayHelper
             return $source_arr;
         }
         if (is_string($fields)) {
+            //"key1,key2,key3"转换为数组
             if (FALSE === strpos($fields, ',')) {
                 return $source_arr;
             }
             $fields = explode(',', $fields);
         }
-        if (static::accessible($fields)) {
-            if ($mode == 1) {
+        if (static::accessible($fields) || static::accessible($source_arr)) {
+            if (!empty(self::isContinuousIndexedArray($source_arr))) {
+                //索引数组
                 foreach ($source_arr as $key => $value) {
-                    if (FALSE === in_array($key, $fields)) {
-                        unset($source_arr[$key]);
-                    }
+                    $source_arr[$key] = self::arrayColumn($value, $fields, $mode);
                 }
             } else {
-                foreach ($fields as $value) {
-                    unset($source_arr[$value]);
+                //混合数组或者关联数组
+                if ($mode == 1) {
+                    //模式一,提取模式
+                    foreach ($source_arr as $key => $value) {
+                        if (FALSE === in_array($key, $fields)) {
+                            unset($source_arr[$key]);
+                        }
+                    }
+                } else {
+                    //模式二,删除模式
+                    foreach ($fields as $value) {
+                        unset($source_arr[$value]);
+                    }
                 }
             }
-
-            return $source_arr;
         }
+        return $source_arr;
     }
 
 
