@@ -134,6 +134,30 @@ class ArrayHelper
     }
 
     /**
+     * 数组求交集,跳过所有空数组和非数组
+     *
+     * @param array ...$arrays
+     *
+     * @return array
+     */
+    public function arrayIntersectNotEmpty(array ...$arrays)
+    {
+        $ret_arr = [];
+        foreach ($arrays as $index => $array) {
+            if (empty($array) || FALSE == is_array($array)) {
+                continue;
+            } else {
+                if (empty($ret_arr)) {
+                    $ret_arr = $array;
+                } else {
+                    $ret_arr = array_intersect($ret_arr, $array);
+                }
+            }
+        }
+        return $ret_arr;
+    }
+
+    /**
      * 数组合并,只合并数组一值为空,后续数组值不为空的项
      *
      * @param array ...$arrays
@@ -482,6 +506,7 @@ class ArrayHelper
 
     /**
      * 无限极列表
+     *
      * @param $user_message_list
      * @param $list
      * @param string $master_id
@@ -503,6 +528,7 @@ class ArrayHelper
 
     /**
      * 无限极树
+     *
      * @param $list
      * @param $ret
      * @param string $master_id
