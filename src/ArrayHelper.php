@@ -140,7 +140,7 @@ class ArrayHelper
      *
      * @return array
      */
-    public function arrayIntersectNotEmpty(array ...$arrays)
+    public static function arrayIntersectNotEmpty(array ...$arrays)
     {
         $ret_arr = [];
         foreach ($arrays as $index => $array) {
@@ -158,13 +158,14 @@ class ArrayHelper
     }
 
     /**
-     * 数组合并,只合并数组一值为空,后续数组值不为空的项
+     * 数组合并<br>
+     * 合并第一个数组(key,val)为空,剩余数组(key=>val)不为空的项
      *
      * @param array ...$arrays
      *
      * @return array
      */
-    public function arrayMergeNotEmpty(array ...$arrays)
+    public static function arrayMergeNotEmpty(array ...$arrays)
     {
         $ret_arr = [];
         foreach ($arrays as $index => $array) {
