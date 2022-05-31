@@ -427,4 +427,97 @@ class DateHelper
         return self::daysToSecond() * 7 * $week;
     }
 
+    /**
+     * 求两个时间段是否有交集,有返回TURE没有返回FALSE,参数有误返回NULL
+     *
+     * @param numeric $time1_start 时间段A的开始
+     * @param numeric $time1_end 时间段A的结束
+     * @param numeric $time2_start 时间段B的开始
+     * @param numeric $time2_end 时间段B的结束
+     *
+     * @return string
+     */
+    public static function timeQuantumCompare($time1_start, $time1_end, $time2_start, $time2_end)
+    {
+        $ret = FALSE;
+        $use_case = 0;
+        if ($time1_start <= $time1_end && $time2_start <= $time2_end === FALSE) {
+            return NULL;
+        }
+        switch (TRUE) {
+            //A1在B1左边
+            case $time1_start < $time2_start && $time1_end < $time2_start:
+                //A2远离B1
+                $ret = FALSE;
+                $use_case = 1;
+                break;
+            case $time1_start < $time2_start && $time1_end === $time2_start:
+                //A2贴B1
+                $ret = FALSE;
+                $use_case = 2;
+                break;
+            case $time1_start < $time2_start && $time1_end > $time2_start && $time1_end < $time2_end:
+                //A2在B1和B2之间
+                $ret = TRUE;
+                $use_case = 3;
+                break;
+            case $time1_start < $time2_start && $time1_end === $time2_end:
+                //A2贴B2
+                $ret = TRUE;
+                $use_case = 4;
+                break;
+            case $time1_start < $time2_start && $time1_end > $time2_end:
+                //A2在B2右边
+                $ret = TRUE;
+                $use_case = 5;
+                break;
+            //A1贴B1
+            case $time1_start === $time2_start && $time1_end < $time2_end:
+                //A2在B1和B2之间
+                $ret = TRUE;
+                $use_case = 6;
+                break;
+            case $time1_start === $time2_start && $time1_end === $time2_end:
+                //A2贴B2
+                $ret = TRUE;
+                $use_case = 7;
+                break;
+            case $time1_start === $time2_start && $time1_end > $time2_end:
+                //A2在B2右边
+                $ret = TRUE;
+                $use_case = 8;
+                break;
+            //A1在B1和B2之间
+            case $time1_start > $time2_start && $time1_start < $time2_end && $time1_end < $time2_end:
+                //A2在B2左边
+                $ret = TRUE;
+                $use_case = 9;
+                break;
+            case $time1_start > $time2_start && $time1_start < $time2_end && $time1_end === $time2_end:
+                //A2贴B2
+                $ret = TRUE;
+                $use_case = 10;
+                break;
+            case $time1_start > $time2_start && $time1_start < $time2_end && $time1_end > $time2_end:
+                //A2在B2右边
+                $ret = TRUE;
+                $use_case = 11;
+                break;
+            //A1贴B2
+            case $time1_start === $time2_end :
+                $ret = FALSE;
+                $use_case = 12;
+                break;
+            //A1在B2右边
+            case $time1_start > $time2_end:
+                $ret = FALSE;
+                $use_case = 13;
+                break;
+            default:
+                break;
+        }
+//        var_dump($use_case);
+        return $ret;
+    }
+
 }
