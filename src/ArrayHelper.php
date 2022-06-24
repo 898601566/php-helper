@@ -288,7 +288,6 @@ class ArrayHelper
         return $source_arr;
     }
 
-
     /**
      * 分组为二维数组
      *
@@ -491,6 +490,7 @@ class ArrayHelper
     {
         return static::arrayUnique($array);
     }
+
     /**
      * 使数组元素唯一,可递归
      *
@@ -558,5 +558,55 @@ class ArrayHelper
         } else {
             $ret = $temp_list;
         }
+    }
+
+    /**
+     * 设置列表一对一关系
+     * @param array $list 主数组
+     * @param array $children 子数组
+     * @param string $children_name 主数组用什么字段名展示子数组
+     * @param string $list_key 主数组-关联字段名
+     * @param string $children_key 子数组-关联字段名
+     *
+     * @return array
+     */
+    public static function listOneToOne(array &$list, array $children, string $children_name, string $list_key,
+        string $children_key): array
+    {
+        foreach ($list as $key => $list_one) {
+            $primary_id = $list_one[$list_key];
+            $list[$key][$children_name] = [];
+            foreach ($children as $child) {
+                if ($child[$children_key] === $primary_id) {
+                    $list[$key][$children_name] = $child;
+                }
+            }
+        }
+        return $list;
+    }
+
+    /**
+     * 设置列表一对多关系
+     * @param array $list 主数组
+     * @param array $children 子数组
+     * @param string $children_name 主数组用什么字段名展示子数组
+     * @param string $list_key 主数组-关联字段名
+     * @param string $children_key 子数组-关联字段名
+     *
+     * @return array
+     */
+    public static function listOneToMulti(array &$list, array $children, string $children_name, string $list_key,
+        string $children_key): array
+    {
+        foreach ($list as $key => $list_one) {
+            $primary_id = $list_one[$list_key];
+            $list[$key][$children_name] = [];
+            foreach ($children as $child) {
+                if ($child[$children_key] === $primary_id) {
+                    $list[$key][$children_name][] = $child;
+                }
+            }
+        }
+        return $list;
     }
 }
