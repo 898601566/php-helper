@@ -562,6 +562,7 @@ class ArrayHelper
 
     /**
      * 设置列表一对一关系
+     *
      * @param array $list 主数组
      * @param array $children 子数组
      * @param string $children_name 主数组用什么字段名展示子数组
@@ -587,6 +588,7 @@ class ArrayHelper
 
     /**
      * 设置列表一对多关系
+     *
      * @param array $list 主数组
      * @param array $children 子数组
      * @param string $children_name 主数组用什么字段名展示子数组
@@ -609,4 +611,49 @@ class ArrayHelper
         }
         return $list;
     }
+
+    /**
+     * 提取子数组的字段到父数组<br>
+     * before<br>
+     * [
+     * "0"=>["stu_id"=>1,"stu_info"=>["stu_id"=>1,"id"=>1,"name"=>"aaa"]],
+     * "1"=>=>["stu_id"=>1,"stu_info"=>["stu_id"=>1,"id"=>1,"name"=>"bbb"],
+     * ]<br>
+     * after<br>
+     * [
+     * "0"=>["stu_id"=>1,"id"=>1,"name"=>"aaa"],
+     * "1"=>=>["stu_id"=>2,"id"=>2,"name"=>"bbb"],
+     * ]
+     * <br>
+     * @param array $list 父数组
+     * @param string $child_name 子数组名称,最后子数组会被删除
+     * @param array $extract_map 关联数组,key为$source_field(原子数组字段名),val为$translate_field(父数组新字段名)
+     * 不填则会替换子数组所有字段
+     * @param int|string $default 如果子数组没有,默认填啥
+     *
+     * @return array
+     */
+    public static function extractChildField(array &$list, string $child_name, array $extract_map = [], $default =
+    ''): array
+    {
+        foreach ($list as $key => $list_one) {
+            $child = $list_one[$child_name];
+            if (empty($extract_map)) {
+                foreach ($child as $key2 => $value2) {
+                    $list[$key][$key2] = $value2;
+                }
+            } else {
+                foreach ($extract_map as $source_field => $translate_field) {
+                    $list[$key][$translate_field] = $default;
+                    if (!empty($child[$source_field])) {
+                        $list[$key][$translate_field] = $child[$source_field];
+                    }
+                }
+            }
+            unset($list[$key][$child_name]);
+        }
+        return $list;
+    }
+
+
 }
