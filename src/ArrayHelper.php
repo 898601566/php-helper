@@ -440,8 +440,8 @@ class ArrayHelper
      * "1"=>[ 'id' => 2,'val' => "bbb"],
      * ]<br>
      * @param $arr
-     * @param $name1 string 名称
-     * @param $name2 string 值
+     * @param $name1 string 名称,默认'id'
+     * @param $name2 string 值,默认'val'
      * @return array [ 'id' => $key,'val' => $value]
      */
     public static function mapToList($arr, $name1 = 'id', $name2 = 'val')
@@ -455,8 +455,8 @@ class ArrayHelper
             } else {
                 foreach ($arr as $key => $value) {
                     $ret[] = [
-                        'id' => $key,
-                        'val' => $value,
+                        $name1 => $key,
+                        $name2 => $value,
                     ];
                 }
             }
