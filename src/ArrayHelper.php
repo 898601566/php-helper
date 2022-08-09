@@ -218,7 +218,7 @@ class ArrayHelper
 
 
     /**
-     * 判断数组是否为关联数组(key是字符串)
+     * 判断数组是否为关联数组(key是非数字字符串)
      */
     public static function isAssocArray($arr)
     {
@@ -230,7 +230,7 @@ class ArrayHelper
 
 
     /**
-     * 判断数组是否为混合数组
+     * 判断数组是否为混合数组(有数字,有非数字key)
      */
     public static function isMixedArray($arr)
     {
@@ -303,33 +303,7 @@ class ArrayHelper
             $new_key = !empty($value[$key]) ? $value[$key] : '';
             $grouped[$new_key][] = $value;
         }
-        if (func_num_args() > 2) {
-            $args = func_get_args();
-            foreach ($grouped as $index => $value) {
-                $parms = array_merge([$value], array_slice($args, 2, func_num_args()));
-                $grouped[$index] = static::arrayGroup($parms);
-            }
-        }
         return $grouped;
-    }
-
-    /**
-     * 返回列表load后的列表
-     *
-     * @param $list 列表
-     * @param $load_key load的数据字段名
-     *
-     * @return array 合并后的load_key对应的load_list
-     */
-    public static function arrayColumnMerge($list, $load_key)
-    {
-        $ret = [];
-        foreach ($list as $key => $value) {
-            foreach ($value[$load_key] as $key2 => $value2) {
-                $ret[] = $value2;
-            }
-        }
-        return array_values($ret);
     }
 
     /**
@@ -425,14 +399,17 @@ class ArrayHelper
     }
 
     /**
-     * 返回类型一定是数组
-     *
+     * 返回类型一定是数组<br>
+     * "aaa,bbb"=>["aaa","bbb"]<br>
+     * "aaa"=>["aaa"]<br>
+     * "1"=>["1"]<br>
+     * ["aaa","bbb"]=>["aaa","bbb"]<br>
      * @param $value
      * @param string $needle
      *
      * @return array|string[]
      */
-    public static function ToTree($value, $needle = ',')
+    public static function ToArray($value, $needle = ',')
     {
         if (empty($value)) {
             return [];
@@ -452,9 +429,19 @@ class ArrayHelper
 
     /**
      * 返回json数据的时候,map格式可能出现顺序问题
-     *
+     * before<br>
+     * [
+     * "1"=>"aaa",
+     * "2"=>"bbb",
+     * ]<br>
+     * after<br>
+     * [
+     * "0"=>[ 'id' => 1,'val' => "aaa"],
+     * "1"=>[ 'id' => 2,'val' => "bbb"],
+     * ]<br>
      * @param $arr
-     *
+     * @param $name1 string 名称
+     * @param $name2 string 值
      * @return array [ 'id' => $key,'val' => $value]
      */
     public static function mapToList($arr, $name1 = 'id', $name2 = 'val')
@@ -492,8 +479,20 @@ class ArrayHelper
     }
 
     /**
-     * 使数组元素唯一,可递归
-     *
+     * 使数组元素唯一,对子元素是数组依旧有效
+     * before<br>
+     * [
+     * "0"=>["stu_id"=>1,"id"=>1,"name"=>"aaa"],
+     * "1"=>["stu_id"=>1,"id"=>1,"name"=>"aaa"],
+     * "2"=>3,
+     * "3"=>3,
+     * ]<br>
+     * after<br>
+     * [
+     * "0"=>["stu_id"=>1,"id"=>1,"name"=>"aaa"],
+     * "1"=>3,
+     * ]<br>
+     * <br>
      * @param array $array
      *
      * @return array
@@ -504,7 +503,7 @@ class ArrayHelper
         $array = !empty($array) ? $array : [];
         foreach ($array as $key => $item) {
             if (FALSE === in_array($item, $result, TRUE)) {
-                $result[$key] = $item;
+                $result[] = $item;
             }
         }
         return $result;
@@ -562,7 +561,21 @@ class ArrayHelper
 
     /**
      * 设置列表一对一关系
-     *
+     * before<br>
+     * [
+     * "0"=>["stu_id"=>1...],
+     * "1"=>=>["stu_id"=>2...],
+     * ]<br>
+     * [
+     * "0"=>[stu_id"=>1,"id"=>1,"name"=>"aaa"]],
+     * "1"=>=>[stu_id"=>1,"id"=>1,"name"=>"bbb"],
+     * ]<br>
+     * after<br>
+     * [
+     * "0"=>["stu_id"=>1,"stu_info"=>["stu_id"=>1,"id"=>1,"name"=>"aaa"]...],
+     * "1"=>=>["stu_id"=>2,"stu_info"=>["stu_id"=>2,"id"=>2,"name"=>"bbb"...],
+     * ]<br>
+     * <br>
      * @param array $list 主数组
      * @param array $children 子数组
      * @param string $children_name 主数组用什么字段名展示子数组
@@ -588,7 +601,21 @@ class ArrayHelper
 
     /**
      * 设置列表一对多关系
-     *
+     * before<br>
+     * [
+     * "0"=>["stu_id"=>1...],
+     * "1"=>=>["stu_id"=>2...],
+     * ]<br>
+     * [
+     * "0"=>[stu_id"=>1,"id"=>1,"name"=>"aaa"]],
+     * "1"=>=>[stu_id"=>1,"id"=>1,"name"=>"bbb"],
+     * ]<br>
+     * after<br>
+     * [
+     * "0"=>["stu_id"=>1,"stu_list"=>["0"=>["stu_id"=>1,"id"=>1,"name"=>"aaa"]]...],
+     * "1"=>=>["stu_id"=>2,"stu_list"=>["0"=>["stu_id"=>2,"id"=>2,"name"=>"bbb"]]...],
+     * ]<br>
+     * <br>
      * @param array $list 主数组
      * @param array $children 子数组
      * @param string $children_name 主数组用什么字段名展示子数组
@@ -613,11 +640,11 @@ class ArrayHelper
     }
 
     /**
-     * 提取子数组的字段到父数组<br>
+     * 提取子数组的字段到父数组,主要用于解决多对多关联<br>
      * before<br>
      * [
      * "0"=>["stu_id"=>1,"stu_info"=>["stu_id"=>1,"id"=>1,"name"=>"aaa"]],
-     * "1"=>=>["stu_id"=>1,"stu_info"=>["stu_id"=>1,"id"=>1,"name"=>"bbb"],
+     * "1"=>=>["stu_id"=>2,"stu_info"=>["stu_id"=>2,"id"=>2,"name"=>"bbb"],
      * ]<br>
      * after<br>
      * [
@@ -639,21 +666,56 @@ class ArrayHelper
         foreach ($list as $key => $list_one) {
             $child = $list_one[$child_name];
             if (empty($extract_map)) {
+                //没有替换数组,则每一个子数组字段都替换
                 foreach ($child as $key2 => $value2) {
                     $list[$key][$key2] = $value2;
                 }
             } else {
+                //有替换数组,则部分字段部分替换
                 foreach ($extract_map as $source_field => $translate_field) {
+                    if (is_int($source_field)){
+                        //整数则说明$source_field和$translate_field相同
+                        $source_field = $translate_field;
+                    }
                     $list[$key][$translate_field] = $default;
-                    if (!empty($child[$source_field])) {
+                    if (isset($child[$source_field])) {
                         $list[$key][$translate_field] = $child[$source_field];
                     }
                 }
             }
+            //最后删除子数组
             unset($list[$key][$child_name]);
         }
         return $list;
     }
 
-
+    /**
+     * 获取子数组的字段组成列表
+     * before<br>
+     * [
+     * "0"=>["stu_id"=>1,"stu_info"=>["stu_id"=>1,"id"=>1,"name"=>"aaa"]],
+     * "1"=>=>["stu_id"=>2,"stu_info"=>["stu_id"=>2,"id"=>2,"name"=>"bbb"],
+     * ]<br>
+     * after<br>
+     * [
+     * "0"=>["stu_id"=>1,"id"=>1,"name"=>"aaa"],
+     * "1"=>=>["stu_id"=>2,"id"=>2,"name"=>"bbb"],
+     * ]
+     * <br>
+     *
+     * @param $list 列表
+     * @param $child_field 子数组字段
+     *
+     * @return array
+     */
+    public static function getChildField($list, $child_field)
+    {
+        $ret = [];
+        foreach ($list as $key => $value) {
+            foreach ($value[$child_field] as $key2 => $value2) {
+                $ret[] = $value2;
+            }
+        }
+        return $ret;
+    }
 }
