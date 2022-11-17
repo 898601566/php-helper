@@ -24,7 +24,7 @@ class LogHelper
      */
     public static function setPathName(string $log_root_path): void
     {
-        static::$log_root_path = $log_root_path. "/runtime/";
+        static::$log_root_path = $log_root_path . "/runtime/";
         if (!is_dir(static::$log_root_path)) {
             if (!mkdir($concurrentDirectory = static::$log_root_path, 0777, TRUE) && !is_dir($concurrentDirectory)) {
                 throw new \RuntimeException(sprintf('Directory "%s" was not created', $concurrentDirectory));
@@ -36,17 +36,18 @@ class LogHelper
     /**
      * 写入日志内容
      *
-     * @param mixed $log
+     * @param mixed $log string 日志内容
+     * @param mixed $type string 日志分类
      *
      * @return mixed
      */
-    public static function writeLog($log)
+    public static function writeLog($log, $type = "")
     {
         if (empty(static::$log_root_path)) {
             throw new \RuntimeException(sprintf('Directory log_root_path was not set'));
         }
-        $log_root_path = static::$log_root_path . date("Y-m-d") . ".log";
-        $log = print_r($log, TRUE)."\n";
+        $log_root_path = static::$log_root_path . date("Y-m-d H") . (!empty($type) ? ".$type" : "") . ".log";
+        $log = print_r($log, TRUE) . "\n";
         echo $log;
         file_put_contents($log_root_path, $log, FILE_APPEND);
         return TRUE;
