@@ -22,7 +22,7 @@ class LogHelper
      * 设置日志根目录
      *
      * @param string $log_root_path 日志根目录
-     * @param array $types 日志分类目录 eg["mysql","request"]
+     * @param array $types 日志分类目录, eg["mysql","request"]
      */
     public static function setPathName(string $log_root_path, $types = []): void
     {
