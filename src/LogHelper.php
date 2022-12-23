@@ -26,7 +26,7 @@ class LogHelper
      */
     public static function setPathName(string $log_root_path, $types = []): void
     {
-        static::$log_root_path = trim("/", $log_root_path) . "/";
+        static::$log_root_path = rtrim($log_root_path, "/") . "/";
         static::$types = $types;
         //创建根目录
         if (!is_dir(static::$log_root_path)) {
@@ -36,7 +36,7 @@ class LogHelper
         }
         //创建分类目录
         foreach ($types as $value) {
-            $path = static::$log_root_path . sprintf("/%s/", $value);
+            $path = rtrim(static::$log_root_path, "/") . sprintf("/%s/", $value);
             if (!is_dir($path)) {
                 if (!mkdir($concurrentDirectory = $path, 0777, TRUE) && !is_dir($concurrentDirectory)) {
                     throw new \RuntimeException(sprintf('Directory "%s" was not created', $concurrentDirectory));
@@ -75,7 +75,7 @@ class LogHelper
             //没有设置分类
             $filename .= ".log";
         }
-        $log_file = $file_path . $filename;
+        $log_file = rtrim($file_path, "/") . $filename;
         $log = print_r($log, TRUE) . "\n";
         echo $log;
         file_put_contents($log_file, $log, FILE_APPEND);
