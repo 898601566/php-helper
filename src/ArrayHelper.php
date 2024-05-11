@@ -619,19 +619,19 @@ class ArrayHelper
      * @param array $list 主数组
      * @param array $children 子数组
      * @param string $children_name 主数组用什么字段名展示子数组
-     * @param string $list_key 主数组-关联字段名
+     * @param string $list_key 主数组-关联字段名,字段数据可以是逗号隔开字符串
      * @param string $children_key 子数组-关联字段名
      *
      * @return array
      */
     public static function listOneToMulti(array &$list, array $children, string $children_name, string $list_key,
-        string $children_key): array
+                                          string $children_key): array
     {
         foreach ($list as $key => $list_one) {
-            $primary_id = $list_one[$list_key];
+            $primary_id_list = self::ToArray($list_one[$list_key]);
             $list[$key][$children_name] = [];
             foreach ($children as $child) {
-                if ($child[$children_key] === $primary_id) {
+                if (in_array($child[$children_key],$primary_id_list,true)) {
                     $list[$key][$children_name][] = $child;
                 }
             }

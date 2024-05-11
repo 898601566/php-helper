@@ -80,7 +80,6 @@ class ValidateHelper
             throw new Error("规则字典和翻译字典数量不相等");
         }
         foreach ($this->ruleMap as $field => $rule) {
-            var_dump($field);
             //必填检测
             if (!empty($rule['require']) && is_null($data[$field])) {
                 return ($this->translateMap[$field]["name"] ?? "") . "必填";
