@@ -175,22 +175,35 @@ class EnvHelper implements ArrayAccess
         return $this->has($name);
     }
 
-    // ArrayAccess
+    // ArrayAccess 接口实现,支持 $env['name'] 方式读写环境变量
+
+    /**
+     * 以数组形式设置环境变量 $env['name'] = $value
+     */
     public function offsetSet($name, $value): void
     {
         $this->set($name, $value);
     }
 
+    /**
+     * 以数组形式检测环境变量是否存在 isset($env['name'])
+     */
     public function offsetExists($name): bool
     {
         return $this->__isset($name);
     }
 
+    /**
+     * 不支持以数组形式删除环境变量
+     */
     public function offsetUnset($name)
     {
         throw new Exception('not support: unset');
     }
 
+    /**
+     * 以数组形式读取环境变量 $env['name']
+     */
     public function offsetGet($name)
     {
         return $this->get($name);

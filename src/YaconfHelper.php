@@ -7,6 +7,9 @@
 
 namespace Helper;
 
+use Helper\exception\BaseException;
+use Helper\exception\SystemException;
+
 
 /**
  * yaconf加载
@@ -28,17 +31,18 @@ class YaconfHelper
 
     /**
      * 获取项目配置名称
+     * 项目名称未设置时抛出 EMPTY_CONFIG_APP_NAME 异常
      * @param $config_name
      * @return string
      */
     public static function formatAppConfigName($config_name): string
     {
         $app_name = env('app.name', '');
-        static::$app_name = static::setAppName($app_name);
+        static::setAppName($app_name);
         if (!empty(static::$app_name)) {
             return static::$app_name . '.' . $config_name;
         } else {
-            ExceptionEmun::throwException(SystemException::EMPTY_CONFIG_APP_NAME);
+            BaseException::throwException(SystemException::EMPTY_CONFIG_APP_NAME);
         }
     }
 

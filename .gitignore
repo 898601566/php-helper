@@ -1,2 +1,23 @@
+# Composer 依赖
 /vendor/
+
+# IDE 编辑器
 /.idea/
+.vscode/
+
+# Composer 自身可执行文件
+composer.phar
+
+# 运行时日志与缓存(LogHelper 默认输出目录)
+/runtime/
+/logs/
+*.log
+
+# 环境变量文件(含敏感信息,禁止提交)
+.env
+.env.*
+
+# 测试与静态分析工具缓存
+.phpunit.result.cache
+.phpunit.cache/
+.php-cs-fixer.cache

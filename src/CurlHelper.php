@@ -17,11 +17,14 @@ class CurlHelper
 {
 
     /**
-     * @param string $url post请求地址
-     * @param array $params
-     * @param array $header
+     * 发送 POST 请求,参数以 JSON 编码后作为请求体
+     * 默认 Content-Type: application/json,连接超时 10 秒
      *
-     * @return mixed
+     * @param string $url post请求地址
+     * @param array $params 请求参数数组,会被 json_encode 后发送
+     * @param array $header 附加 HTTP 头,如['Content-Type'=>'application/json']
+     *
+     * @return mixed 响应内容(curl_exec 原样返回,失败返回false)
      */
     public static function curlPost($url, array $params = [], $header = [])
     {
@@ -48,7 +51,7 @@ class CurlHelper
         foreach ($header as $key => $value) {
             $header[$key] = "$key:$value";
         }
-        if (empty($header)) {
+        if (!empty($header)) {
             curl_setopt(
                 $ch, CURLOPT_HTTPHEADER, array_values($header)
             );
@@ -58,6 +61,15 @@ class CurlHelper
         return ($data);
     }
 
+    /**
+     * 发送 POST 请求,原样发送请求体字符串(不做 json_encode)
+     * 固定 Content-Type: text,连接超时 10 秒
+     *
+     * @param string $url post请求地址
+     * @param string $rawData 原始请求体内容
+     *
+     * @return mixed 响应内容(curl_exec 原样返回,失败返回false)
+     */
     public static function curlPostRaw($url, $rawData)
     {
         $ch = curl_init();
@@ -80,10 +92,14 @@ class CurlHelper
     }
 
     /**
-     * @param string $url get请求地址
-     * @param int $httpCode 返回状态码
+     * 发送 GET 请求
+     * $data 为数组时自动 http_build_query 拼接到 url,连接超时 10 秒
      *
-     * @return mixed
+     * @param string $url get请求地址
+     * @param array $data 查询参数,数组或已拼接的查询字符串
+     * @param array $header 附加 HTTP 头,如['Authorization'=>'Bearer xxx']
+     *
+     * @return mixed 响应内容(curl_exec 原样返回,失败返回false)
      */
     public function curlGet($url, array $data = [], $header = [])
     {
@@ -96,7 +112,7 @@ class CurlHelper
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 //    设置 HTTP 头字段的数组
-        if (empty($header)) {
+        if (!empty($header)) {
             foreach ($header as $key => $value) {
                 $header[$key] = "$key:$value";
             }

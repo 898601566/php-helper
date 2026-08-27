@@ -10,12 +10,23 @@ namespace Helper;
 
 /**
  * 记录日志
+ * 使用前先调用 setPathName 设置日志根目录和分类目录(自动创建)
+ * 日志文件按小时切分,分类日志写入对应子目录
  * Class LogHelper
  * @package Helper
  */
 class LogHelper
 {
+    /**
+     * 日志根目录,以 / 结尾
+     * @var string
+     */
     protected static $log_root_path = '';
+
+    /**
+     * 已注册的日志分类列表,如['mysql','request']
+     * @var array
+     */
     protected static $types = [];
 
     /**
@@ -48,9 +59,14 @@ class LogHelper
 
     /**
      * 写入日志内容
+     * 内容经 print_r 转字符串后追加写入,文件按小时切分
+     * 已注册分类 -> <根目录>/<分类>/Y-m-d H.log
+     * 未注册分类 -> <根目录>/Y-m-d H.<分类>.log
+     * 无分类     -> <根目录>/Y-m-d H.log
+     * 写入前需先调用 setPathName 设置日志根目录
      *
      * @param mixed $log string 日志内容
-     * @param mixed $type string 日志分类
+     * @param mixed $type string 日志分类,需在 setPathName 的 $types 中注册
      *
      * @return mixed
      */

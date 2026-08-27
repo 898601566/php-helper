@@ -1,7 +1,8 @@
 <?php
 if (!function_exists('value')) {
     /**
-     * Return the default value of the given value.
+     * 返回给定值的默认值
+     * 传入闭包则执行并返回结果,否则原样返回
      *
      * @param mixed $value
      *

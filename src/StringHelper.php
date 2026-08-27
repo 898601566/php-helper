@@ -63,6 +63,7 @@ class StringHelper
 
     /**
      * 检测是否是空字符串
+     * 传入数组则递归检测:全部元素都是空字符串返回true,任一元素非空返回false
      * @param mixed $var 字符串或数组
      * @return bool
      */
@@ -70,10 +71,11 @@ class StringHelper
     {
         if (is_array($var)) {
             foreach ($var as $k => $v) {
-                if (static::is_empty_string($v) == false) {
+                if (static::isEmptyString($v) == false) {
                     return false;
                 }
             }
+            return true;
         } else {
             if (strlen(strval($var)) == 0) {
                 return true;

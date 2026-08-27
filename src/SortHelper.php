@@ -79,7 +79,9 @@ class SortHelper
     }
 
     /**
-     * 泡沫排序
+     * 泡沫排序(冒泡排序)
+     * 相邻元素两两比较,每轮将最大值冒泡到末尾
+     * 时间复杂度 O(n²),原地排序
      * @param $arr
      *
      * @return mixed
@@ -123,9 +125,11 @@ class SortHelper
 
     /**
      * 快速排序
+     * 以支点元素为界分成两部分,递归排序后合并
+     * 时间复杂度平均 O(nlogn),原地排序
      * @param $arr
-     * @param $left_index
-     * @param $right_index
+     * @param $left_index 排序区间左边界
+     * @param $right_index 排序区间右边界
      *
      * @return mixed
      */
@@ -141,6 +145,8 @@ class SortHelper
 
     /**
      * 桶排序
+     * 以最小值到最大值为桶编号,同值元素入同桶,依桶号顺序输出
+     * 适用于非负整数且值域跨度不大的场景
      * @param $arr
      *
      * @return array|mixed
@@ -182,7 +188,9 @@ class SortHelper
     }
 
     /**
-     * 基排
+     * 基排(基数排序)
+     * 从个位到最高位按位依次分桶收集,时间复杂度 O(d·n)
+     * 适用于非负整数
      * @param $arr
      *
      * @return array|mixed
@@ -198,6 +206,8 @@ class SortHelper
 
     /**
      * 选择排序
+     * 每轮从未排序区间选出最小值,放到已排序区间末尾
+     * 时间复杂度 O(n²),原地排序
      * @param $arr
      *
      * @return mixed
@@ -219,6 +229,8 @@ class SortHelper
 
     /**
      * 插入排序
+     * 将当前元素插入前面已排序区间的正确位置
+     * 时间复杂度 O(n²),对近乎有序的数据表现较好
      * @param $arr
      *
      * @return mixed
@@ -236,6 +248,8 @@ class SortHelper
 
     /**
      * 希尔排序
+     * 插入排序的改进版,按增量gap分组做插入排序,增量逐轮减半
+     * 时间复杂度取决于增量序列,约 O(n^1.3)
      * @param $arr
      *
      * @return mixed
@@ -281,7 +295,9 @@ class SortHelper
     }
 
     /**
-     * 堆排
+     * 堆排(堆排序)
+     * 先建大顶堆,再逐次交换堆顶与末尾元素并调整堆
+     * 时间复杂度 O(nlogn),原地排序
      * @param $arr
      *
      * @return mixed
@@ -327,7 +343,9 @@ class SortHelper
     }
 
     /**
-     * 合并排序
+     * 合并排序(归并排序)
+     * 递归二分数组,再逐层合并两个有序数组
+     * 时间复杂度稳定 O(nlogn),非原地,返回新数组
      * @param $arr
      *
      * @return mixed

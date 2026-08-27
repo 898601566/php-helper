@@ -28,9 +28,14 @@ class ArrayHelper
     }
 
     /**
-     * Return the first element in an array passing a given truth test.
+     * 返回数组中第一个通过回调检测的元素
+     * 不传回调时直接返回数组第一个元素
      *
-     * @param null|mixed $default
+     * @param array $array 目标数组
+     * @param callable|null $callback 检测回调,参数为($value,$key),返回true则命中
+     * @param null|mixed $default 无命中时的默认值,支持闭包
+     *
+     * @return mixed
      */
     public static function first(array $array, callable $callback = NULL, $default = NULL)
     {
@@ -51,9 +56,14 @@ class ArrayHelper
     }
 
     /**
-     * Return the last element in an array passing a given truth test.
+     * 返回数组中最后一个通过回调检测的元素
+     * 不传回调时直接返回数组最后一个元素
      *
-     * @param null|mixed $default
+     * @param array $array 目标数组
+     * @param callable|null $callback 检测回调,参数为($value,$key),返回true则命中
+     * @param null|mixed $default 无命中时的默认值,支持闭包
+     *
+     * @return mixed
      */
     public static function last(array $array, callable $callback = NULL, $default = NULL)
     {

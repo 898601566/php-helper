@@ -15,7 +15,7 @@ class BaseException extends \Exception
      *
      * @param array $params 关联数组应包含code、msg和data，且不应该是空值
      */
-    public function __construct($message = [], $code = '', Throwable $previous = null)
+    public function __construct($message = [], $code = '', \Throwable $previous = null)
     {
         parent::__construct($message,$code,$previous);
     }
@@ -23,6 +23,7 @@ class BaseException extends \Exception
 
     /**
      * 获取异常返回信息 code,msg,data
+     * 用于渲染成统一 JSON 响应结构
      * @return array
      */
     public function getInfo()
@@ -67,6 +68,11 @@ class BaseException extends \Exception
 
 }
 
+/**
+ * 系统级异常错误码常量表
+ * 每个常量是 ['msg'=>提示信息, 'code'=>错误码] 数组,
+ * 配合 BaseException::throwException(SystemException::XXX) 抛出
+ */
 class SystemException extends BaseException
 {
     const INVALID_USE_REDIS = ['msg' => '错误使用缓存', 'code' => 10001,];
